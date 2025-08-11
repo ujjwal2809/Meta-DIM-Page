@@ -39,7 +39,7 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             <button className="hidden sm:inline-flex items-center gap-2 btn-primary">
               <Phone className="w-4 h-4" />
-              Call Now
+              +91 8451086339
             </button>
             
             {/* Mobile Menu Button */}

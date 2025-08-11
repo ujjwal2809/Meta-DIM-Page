@@ -71,7 +71,7 @@ const Hero = () => {
                       {roles[currentRole]}
                     </span>
                   </span>
-                  <span className="text-neutral-900">   role</span>
+                  <span className="text-neutral-900"> role</span>
                   <br />
                   <span className="text-2xl sm:text-3xl lg:text-4xl text-neutral-600 font-normal">in just 12 weeks</span>
                 </h1>

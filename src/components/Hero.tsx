@@ -63,7 +63,7 @@ const Hero = () => {
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
                   <span className="text-neutral-900">Land a high-paying</span>
                   <br />
-                  <span className="relative inline-block">
+                  <span className="relative inline-block w-[220px] text-left">
                     <span 
                       key={currentRole}
                       className="text-brand-500 animate-pulse"

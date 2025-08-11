@@ -71,7 +71,12 @@ const Features = () => {
 
         <div className="space-y-12 lg:space-y-16">
           {features.map((feature, index) => (
-            <VideoFeature key={index} feature={feature} reverse={index % 2 === 1} />
+            <div
+              key={index}
+              id={feature.title === "Placement Training" ? "placement-training" : undefined}
+            >
+              <VideoFeature feature={feature} reverse={index % 2 === 1} />
+            </div>
           ))}
         </div>
       </div>
@@ -79,7 +84,6 @@ const Features = () => {
   );
 };
 
-// Video section with click-to-play logic and loop
 const VideoFeature = ({ feature, reverse }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const thumbnail = `https://img.youtube.com/vi/${feature.videoId}/hqdefault.jpg`;
@@ -87,7 +91,6 @@ const VideoFeature = ({ feature, reverse }) => {
 
   return (
     <div className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-center ${reverse ? 'lg:grid-flow-col-dense' : ''}`}>
-      {/* Text Content */}
       <div className={`space-y-4 lg:space-y-6 ${reverse ? 'lg:col-start-2' : ''}`}>
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center w-12 lg:w-16 h-12 lg:h-16 bg-brand-50 rounded-md border border-brand-200">
@@ -111,7 +114,6 @@ const VideoFeature = ({ feature, reverse }) => {
         </div>
       </div>
 
-      {/* Clickable Video */}
       <div className={`${reverse ? 'lg:col-start-1' : ''}`}>
         <div
           className="relative overflow-hidden rounded-lg border border-neutral-700 shadow-lg aspect-video group cursor-pointer"

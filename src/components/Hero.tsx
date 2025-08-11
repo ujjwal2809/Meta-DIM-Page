@@ -66,7 +66,7 @@ const Hero = () => {
                   <span className="text-neutral-900">
                     <span 
                       key={currentRole}
-                      className="text-brand-500 animate-pulse"
+                      className="text-brand-500 inline-block min-w-[180px] transition-opacity duration-500 ease-in-out"
                     >
                       {roles[currentRole]}
                     </span>

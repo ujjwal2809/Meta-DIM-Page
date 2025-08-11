@@ -108,7 +108,7 @@ const Hero = () => {
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
                 
-                <button className="btn-secondary">
+                <button className="btn-secondary flex items-center">
                   <Play className="w-5 h-5 mr-2" />
                   Watch Success Stories
                 </button>

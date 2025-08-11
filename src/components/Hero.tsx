@@ -108,10 +108,15 @@ const Hero = () => {
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
                 
-                <button className="btn-secondary flex items-center">
-                  <Play className="w-5 h-5 mr-2" />
-                  Watch Success Stories
-                </button>
+               <button
+  className="btn-secondary flex items-center"
+  onClick={() => {
+    document.getElementById('placement-training')?.scrollIntoView({ behavior: 'smooth' });
+  }}
+>
+  <Play className="w-5 h-5 mr-2" />
+  Watch Success Stories
+</button>
               </div>
 
               {/* Trust Indicators */}

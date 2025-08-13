@@ -57,16 +57,19 @@
 }
 
 /* ===================== */
-/* Smooth scrolling keyframes */
+/* Smooth infinite scroll */
 /* ===================== */
+
+/* Make the animation based on container width, so it works on all screen sizes */
 @keyframes scroll {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-50%, 0, 0); }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-/* Single animation speed for both desktop and mobile */
+/* Same animation speed for desktop & mobile */
 .animate-scroll {
-  animation: scroll 25s linear infinite;
+  display: flex;
+  animation: scroll 40s linear infinite;
   will-change: transform;
 }
 

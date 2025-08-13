@@ -112,28 +112,36 @@ const FormModal: React.FC<FormModalProps> = ({
     setSubmitStatus('idle');
     try {
       const response = await fetch(
-        'https://script.google.com/macros/s/AKfycbxNSeZFu6XZiciUgIYNR8bJJVHQ_bZX6ayuQivKhHnkPEF7hJuilC_XEVUzMQkTf_FP/exec',
+        'https://script.google.com/macros/s/AKfycbwJ8A-uCzr0p1zatsWuMYf7DOQ9dI7As6Jz0yjzTG74beJUpg5UipMEA-_k-eftBGL7hw/exec',
         {
           method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify({
             firstName: formData.firstName.trim(),
             lastName: formData.lastName.trim(),
             phoneNumber: formData.phoneNumber.replace(/\D/g, ''),
             email: formData.email.trim(),
-            experience: formData.experience,
-            timestamp: new Date().toISOString(),
-            source: 'DevOps Institute Mumbai Website'
+            experience: formData.experience
           })
         }
       );
-      // With no-cors mode, we can't check response status
-      // Assume success if no error was thrown
-      setSubmitStatus('success');
-      setTimeout(() => { onClose(); }, 2000);
+      
+      console.log('Response:', response);
+      
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Response data:', responseData);
+        alert('Form submitted successfully!');
+        setSubmitStatus('success');
+        setTimeout(() => { onClose(); }, 2000);
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
       console.error('Form submission error:', error);
+      alert('Form submission failed. Please try again.');
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);

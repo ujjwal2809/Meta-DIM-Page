@@ -59,20 +59,30 @@
 /* ===================== */
 /* Smooth infinite scroll */
 /* ===================== */
-
-/* Make the animation based on container width, so it works on all screen sizes */
 @keyframes scroll {
-  0% { transform: translateX(0); }
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-/* Same animation speed for desktop & mobile */
 .animate-scroll {
   display: flex;
-  animation: scroll 40s linear infinite;
+  width: max-content;          /* Ensures track fits content width */
+  animation: scroll 30s linear infinite;
   will-change: transform;
+  transform: translateZ(0);    /* Improves performance on mobile */
 }
 
-.animate-scroll:hover {
-  animation-play-state: paused;
+/* Pause on hover only if hover is supported */
+@media (hover: hover) and (pointer: fine) {
+  .animate-scroll:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Respect reduced motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll {
+    animation: none;
+    transform: none;
+  }
 }

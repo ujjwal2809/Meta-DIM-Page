@@ -23,14 +23,20 @@ const SuccessShowcase = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Only duplicate stories for desktop to reduce DOM load
+  // Duplicate only on desktop for seamless infinite scroll
   const duplicatedStories = isMobile ? successStories : [...successStories, ...successStories];
 
   return (
-    <section className="section-padding bg-background-secondary overflow-hidden">
+    <section
+      className="section-padding bg-background-secondary overflow-hidden"
+      aria-labelledby="success-showcase-title"
+    >
       <div className="container-custom mb-6 lg:mb-8">
         <div className="text-center">
-          <h2 className="text-2xl lg:text-3xl xl:text-4xl font-semibold text-neutral-900 mb-2">
+          <h2
+            id="success-showcase-title"
+            className="text-2xl lg:text-3xl xl:text-4xl font-semibold text-neutral-900 mb-2"
+          >
             750+ Successful Transitions
           </h2>
           <p className="text-neutral-600 text-sm lg:text-base">
@@ -41,29 +47,40 @@ const SuccessShowcase = () => {
 
       <div className="relative">
         {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 lg:w-32 bg-gradient-to-r from-background-secondary to-transparent z-10"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-16 lg:w-32 bg-gradient-to-l from-background-secondary to-transparent z-10"></div>
+        <div className="absolute left-0 top-0 bottom-0 w-16 lg:w-32 bg-gradient-to-r from-background-secondary to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-16 lg:w-32 bg-gradient-to-l from-background-secondary to-transparent z-10 pointer-events-none"></div>
         
         {/* Scrolling container */}
-        <div className={`flex ${isMobile ? 'animate-scroll-slow' : 'animate-scroll'}`}>
+        <div
+          className={`flex ${isMobile ? 'animate-scroll-slow' : 'animate-scroll'}`}
+          role="list"
+        >
           {duplicatedStories.map((story, index) => (
-            <div key={index} className="flex-shrink-0 mx-2 lg:mx-3">
-              <div className="w-32 lg:w-40 h-40 lg:h-48 card p-3 lg:p-4 hover:shadow-card-hover transition-all duration-300 hover:scale-105 border border-neutral-200">
+            <div
+              key={`${story.name}-${index}`}
+              className="flex-shrink-0 mx-2 lg:mx-3"
+              role="listitem"
+            >
+              <div className="w-32 lg:w-40 h-40 lg:h-48 card p-3 lg:p-4 hover:shadow-card-hover transition-transform duration-300 hover:scale-105 border border-neutral-200 bg-white">
                 <div className="flex flex-col h-full">
+                  {/* Profile image */}
                   <div className="flex-1 flex items-center justify-center">
-                    <img 
-                      src={story.image} 
-                      alt={story.name}
+                    <img
+                      src={story.image}
+                      alt={`${story.name} profile`}
                       loading="lazy"
                       className="w-14 lg:w-16 h-14 lg:h-16 rounded-full object-cover border-4 border-brand-100"
                     />
                   </div>
+                  {/* Name & Company */}
                   <div className="text-center mt-2 lg:mt-3">
-                    <h4 className="text-xs lg:text-sm font-semibold text-neutral-800 mb-1">{story.name}</h4>
+                    <h4 className="text-xs lg:text-sm font-semibold text-neutral-800 mb-1">
+                      {story.name}
+                    </h4>
                     <div className="flex items-center justify-center h-10 lg:h-12">
-                      <img 
-                        src={story.companyLogo} 
-                        alt="Company Logo"
+                      <img
+                        src={story.companyLogo}
+                        alt={`${story.name}'s company logo`}
                         loading="lazy"
                         className="h-8 lg:h-12 w-auto object-contain"
                       />

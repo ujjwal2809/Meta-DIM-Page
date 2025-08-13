@@ -14,8 +14,8 @@ const SuccessShowcase = () => {
     { name: "Rahul Saini", image: "/assets/images/testimonials/Rahul_Saini.jpeg", companyLogo: "https://logo.clearbit.com/oracle.com" }
   ];
 
-  // Duplicate stories for seamless infinite scroll on all devices
-  const duplicatedStories = [...successStories, ...successStories];
+  // Triple the stories for a seamless infinite loop
+  const duplicatedStories = [...successStories, ...successStories, ...successStories];
 
   return (
     <section
@@ -42,7 +42,7 @@ const SuccessShowcase = () => {
         <div className="absolute right-0 top-0 bottom-0 w-16 lg:w-32 bg-gradient-to-l from-background-secondary to-transparent z-10 pointer-events-none"></div>
         
         {/* Scrolling container */}
-        <div className="flex animate-scroll" role="list">
+        <div className="animate-scroll" role="list">
           {duplicatedStories.map((story, index) => (
             <div
               key={`${story.name}-${index}`}

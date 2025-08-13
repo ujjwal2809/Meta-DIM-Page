@@ -5,19 +5,24 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handlePhoneClick = () => {
     if (window.innerWidth >= 640) {
-      // Desktop → show form
-      setIsFormOpen(true);
+      setIsFormOpen(true); // Desktop → show form
     } else {
-      // Mobile → open phone dialer
-      window.location.href = 'tel:+918451086339';
+      window.location.href = 'tel:+918451086339'; // Mobile → call
     }
   };
+
+  // Menu items for reuse
+  const menuLinks = [
+    { id: 'program', label: 'Program' },
+    { id: 'features', label: 'Features' },
+    { id: 'testimonials', label: 'Success Stories' },
+    { id: 'instructors', label: 'Instructors' },
+    { id: 'faq', label: 'FAQ' }
+  ];
 
   return (
     <>
@@ -34,20 +39,26 @@ const Navbar = () => {
                 />
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl font-semibold text-neutral-900">DevOps Institute Mumbai</h1>
+                <h1 className="text-xl font-semibold text-neutral-900">
+                  DevOps Institute Mumbai
+                </h1>
               </div>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
-              <a href="#program" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">Program</a>
-              <a href="#Features" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">Features</a>
-              <a href="#testimonials" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">Success Stories</a>
-              <a href="#instructors" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">Instructors</a>
-              <a href="#faq" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">FAQ</a>
+              {menuLinks.map(link => (
+                <a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  className="text-neutral-600 hover:text-brand-500 transition-colors font-medium"
+                >
+                  {link.label}
+                </a>
+              ))}
             </div>
 
-            {/* CTA Button */}
+            {/* CTA + Mobile Menu Button */}
             <div className="flex items-center gap-4">
               <button 
                 onClick={handlePhoneClick} 
@@ -56,8 +67,6 @@ const Navbar = () => {
                 <Phone className="w-4 h-4" />
                 +91 8451086339
               </button>
-              
-              {/* Mobile Menu Button */}
               <button
                 onClick={toggleMenu}
                 className="lg:hidden p-2 text-neutral-600 hover:text-neutral-900 transition-colors"
@@ -71,11 +80,16 @@ const Navbar = () => {
           {isMenuOpen && (
             <div className="lg:hidden py-4 border-t border-neutral-200">
               <div className="flex flex-col space-y-4">
-                <a href="#program" className="text-neutral-600 hover:text-brand-500 transition-colors py-2 font-medium">Program</a>
-                <a href="#features" className="text-neutral-600 hover:text-brand-500 transition-colors py-2 font-medium">Features</a>
-                <a href="#testimonials" className="text-neutral-600 hover:text-brand-500 transition-colors py-2 font-medium">Success Stories</a>
-                <a href="#instructors" className="text-neutral-600 hover:text-brand-500 transition-colors py-2 font-medium">Instructors</a>
-                <a href="#faq" className="text-neutral-600 hover:text-brand-500 transition-colors py-2 font-medium">FAQ</a>
+                {menuLinks.map(link => (
+                  <a
+                    key={link.id}
+                    href={`#${link.id}`}
+                    className="text-neutral-600 hover:text-brand-500 transition-colors py-2 font-medium"
+                    onClick={() => setIsMenuOpen(false)} // close menu after click
+                  >
+                    {link.label}
+                  </a>
+                ))}
                 <button 
                   onClick={handlePhoneClick} 
                   className="sm:hidden inline-flex items-center justify-center gap-2 btn-primary mt-4"

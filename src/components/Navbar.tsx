@@ -41,7 +41,7 @@ const Navbar = () => {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
               <a href="#program" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">Program</a>
-              <a href="#features" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">Features</a>
+              <a href="#Features" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">Features</a>
               <a href="#testimonials" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">Success Stories</a>
               <a href="#instructors" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">Instructors</a>
               <a href="#faq" className="text-neutral-600 hover:text-brand-500 transition-colors font-medium">FAQ</a>

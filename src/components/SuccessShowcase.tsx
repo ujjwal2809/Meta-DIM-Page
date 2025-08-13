@@ -14,8 +14,8 @@ const SuccessShowcase = () => {
     { name: "Rahul Saini", image: "/assets/images/testimonials/Rahul_Saini.jpeg", companyLogo: "https://logo.clearbit.com/oracle.com" }
   ];
 
-  // Triple the stories for a seamless infinite loop
-  const duplicatedStories = [...successStories, ...successStories, ...successStories];
+  // Duplicate twice for seamless scroll
+  const duplicatedStories = [...successStories, ...successStories];
 
   return (
     <section
@@ -41,43 +41,45 @@ const SuccessShowcase = () => {
         <div className="absolute left-0 top-0 bottom-0 w-16 lg:w-32 bg-gradient-to-r from-background-secondary to-transparent z-10 pointer-events-none"></div>
         <div className="absolute right-0 top-0 bottom-0 w-16 lg:w-32 bg-gradient-to-l from-background-secondary to-transparent z-10 pointer-events-none"></div>
         
-        {/* Scrolling container */}
+        {/* Scrolling track */}
         <div className="animate-scroll" role="list">
-          {duplicatedStories.map((story, index) => (
-            <div
-              key={`${story.name}-${index}`}
-              className="flex-shrink-0 mx-2 lg:mx-3"
-              role="listitem"
-            >
-              <div className="w-32 lg:w-40 h-40 lg:h-48 card p-3 lg:p-4 hover:shadow-card-hover transition-transform duration-300 hover:scale-105 border border-neutral-200 bg-white">
-                <div className="flex flex-col h-full">
-                  {/* Profile image */}
-                  <div className="flex-1 flex items-center justify-center">
-                    <img
-                      src={story.image}
-                      alt={`${story.name} profile`}
-                      loading="lazy"
-                      className="w-14 lg:w-16 h-14 lg:h-16 rounded-full object-cover border-4 border-brand-100"
-                    />
-                  </div>
-                  {/* Name & Company */}
-                  <div className="text-center mt-2 lg:mt-3">
-                    <h4 className="text-xs lg:text-sm font-semibold text-neutral-800 mb-1">
-                      {story.name}
-                    </h4>
-                    <div className="flex items-center justify-center h-10 lg:h-12">
+          <div className="flex">
+            {duplicatedStories.map((story, index) => (
+              <div
+                key={`${story.name}-${index}`}
+                className="flex-shrink-0 mx-2 lg:mx-3"
+                role="listitem"
+              >
+                <div className="w-32 lg:w-40 h-40 lg:h-48 card p-3 lg:p-4 hover:shadow-card-hover transition-transform duration-300 hover:scale-105 border border-neutral-200 bg-white">
+                  <div className="flex flex-col h-full">
+                    {/* Profile image */}
+                    <div className="flex-1 flex items-center justify-center">
                       <img
-                        src={story.companyLogo}
-                        alt={`${story.name}'s company logo`}
+                        src={story.image}
+                        alt={`${story.name} profile`}
                         loading="lazy"
-                        className="h-8 lg:h-12 w-auto object-contain"
+                        className="w-14 lg:w-16 h-14 lg:h-16 rounded-full object-cover border-4 border-brand-100"
                       />
+                    </div>
+                    {/* Name & Company */}
+                    <div className="text-center mt-2 lg:mt-3">
+                      <h4 className="text-xs lg:text-sm font-semibold text-neutral-800 mb-1">
+                        {story.name}
+                      </h4>
+                      <div className="flex items-center justify-center h-10 lg:h-12">
+                        <img
+                          src={story.companyLogo}
+                          alt={`${story.name}'s company logo`}
+                          loading="lazy"
+                          className="h-8 lg:h-12 w-auto object-contain"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

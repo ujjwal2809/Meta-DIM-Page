@@ -15,7 +15,17 @@ const Navbar = () => {
     }
   };
 
-  // All IDs match lowercase section IDs
+  const handleNavClick = (e, id) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+    const section = document.getElementById(id);
+    if (section) {
+      const offset = 80; // adjust for navbar height
+      const top = section.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  };
+
   const menuLinks = [
     { id: 'program', label: 'Program' },
     { id: 'features', label: 'Features' },
@@ -32,9 +42,9 @@ const Navbar = () => {
             {/* Logo */}
             <div className="flex items-center gap-3">
               <div className="w-20 h-20">
-                <img 
-                  src="/assets/images/testimonials/devopslogo1.png" 
-                  alt="DevOps Institute Mumbai Logo" 
+                <img
+                  src="/assets/images/testimonials/devopslogo1.png"
+                  alt="DevOps Institute Mumbai Logo"
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -51,6 +61,7 @@ const Navbar = () => {
                 <a
                   key={link.id}
                   href={`#${link.id}`}
+                  onClick={(e) => handleNavClick(e, link.id)}
                   className="text-neutral-600 hover:text-brand-500 transition-colors font-medium"
                 >
                   {link.label}
@@ -60,8 +71,8 @@ const Navbar = () => {
 
             {/* CTA + Mobile Menu Button */}
             <div className="flex items-center gap-4">
-              <button 
-                onClick={handlePhoneClick} 
+              <button
+                onClick={handlePhoneClick}
                 className="hidden sm:inline-flex items-center gap-2 btn-primary"
               >
                 <Phone className="w-4 h-4" />
@@ -84,14 +95,14 @@ const Navbar = () => {
                   <a
                     key={link.id}
                     href={`#${link.id}`}
+                    onClick={(e) => handleNavClick(e, link.id)}
                     className="text-neutral-600 hover:text-brand-500 transition-colors py-2 font-medium"
-                    onClick={() => setIsMenuOpen(false)}
                   >
                     {link.label}
                   </a>
                 ))}
-                <button 
-                  onClick={handlePhoneClick} 
+                <button
+                  onClick={handlePhoneClick}
                   className="sm:hidden inline-flex items-center justify-center gap-2 btn-primary mt-4"
                 >
                   <Phone className="w-4 h-4" />
@@ -109,26 +120,26 @@ const Navbar = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-lg font-semibold mb-4">Request a Callback</h2>
             <form className="space-y-4">
-              <input 
-                type="text" 
-                placeholder="Your Name" 
+              <input
+                type="text"
+                placeholder="Your Name"
                 className="w-full border border-neutral-300 p-2 rounded"
               />
-              <input 
-                type="tel" 
-                placeholder="Your Phone Number" 
+              <input
+                type="tel"
+                placeholder="Your Phone Number"
                 className="w-full border border-neutral-300 p-2 rounded"
               />
               <div className="flex justify-end gap-2">
-                <button 
-                  type="button" 
-                  onClick={() => setIsFormOpen(false)} 
+                <button
+                  type="button"
+                  onClick={() => setIsFormOpen(false)}
                   className="px-4 py-2 border rounded"
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="btn-primary px-4 py-2 rounded"
                 >
                   Submit

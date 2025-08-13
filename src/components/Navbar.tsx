@@ -15,7 +15,7 @@ const Navbar = () => {
     }
   };
 
-  // Menu items for reuse
+  // All IDs match lowercase section IDs
   const menuLinks = [
     { id: 'program', label: 'Program' },
     { id: 'features', label: 'Features' },
@@ -85,7 +85,7 @@ const Navbar = () => {
                     key={link.id}
                     href={`#${link.id}`}
                     className="text-neutral-600 hover:text-brand-500 transition-colors py-2 font-medium"
-                    onClick={() => setIsMenuOpen(false)} // close menu after click
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     {link.label}
                   </a>

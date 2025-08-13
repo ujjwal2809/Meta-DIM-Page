@@ -122,7 +122,8 @@ const FormModal: React.FC<FormModalProps> = ({
     setSubmitStatus('idle');
 
     try {
-      const response = awaitfetch('https://script.google.com/macros/s/AKfycbxF63OR0qJWOAvCs7ymfqKEZcplsz2Ib_donD6BBUEXe2b3bknEV3qJ8yeAz6GEYlOeNQ/exec',
+      const response = await fetch(
+'https://script.google.com/macros/s/AKfycbxF63OR0qJWOAvCs7ymfqKEZcplsz2Ib_donD6BBUEXe2b3bknEV3qJ8yeAz6GEYlOeNQ/exec',
         {
           method: 'POST',
           headers: {

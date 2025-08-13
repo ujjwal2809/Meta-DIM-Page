@@ -123,7 +123,7 @@ const FormModal: React.FC<FormModalProps> = ({
 
     try {
       const response = await fetch(
-'https://script.google.com/macros/s/AKfycbxF63OR0qJWOAvCs7ymfqKEZcplsz2Ib_donD6BBUEXe2b3bknEV3qJ8yeAz6GEYlOeNQ/exec',
+'https://script.google.com/macros/s/AKfycbwR3KAOo9mK_rykJOLWDO_fMqoEtjPa2XfQ02neUngq/dev',
         {
           method: 'POST',
           headers: {

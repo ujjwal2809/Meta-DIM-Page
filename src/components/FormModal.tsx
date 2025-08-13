@@ -112,9 +112,10 @@ const FormModal: React.FC<FormModalProps> = ({
     setSubmitStatus('idle');
     try {
       const response = await fetch(
-        'https://script.google.com/macros/s/AKfycbxk9vWc8cZViug9zihWe7mbAQRSYKNIlCzFnHhNcEnihFAHp3Med2viPbMXWBv0MeWgBA/exec',
+        'https://script.google.com/macros/s/AKfycbxNSeZFu6XZiciUgIYNR8bJJVHQ_bZX6ayuQivKhHnkPEF7hJuilC_XEVUzMQkTf_FP/exec',
         {
           method: 'POST',
+          mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             firstName: formData.firstName.trim(),
@@ -127,12 +128,10 @@ const FormModal: React.FC<FormModalProps> = ({
           })
         }
       );
-      if (response.ok) {
-        setSubmitStatus('success');
-        setTimeout(() => { onClose(); }, 2000);
-      } else {
-        throw new Error('Submission failed');
-      }
+      // With no-cors mode, we can't check response status
+      // Assume success if no error was thrown
+      setSubmitStatus('success');
+      setTimeout(() => { onClose(); }, 2000);
     } catch (error) {
       console.error('Form submission error:', error);
       setSubmitStatus('error');

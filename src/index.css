@@ -64,24 +64,12 @@
   100% { transform: translate3d(-50%, 0, 0); }
 }
 
-@keyframes scroll-slow {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-50%, 0, 0); }
-}
-
-/* Default (desktop) speed */
+/* Single animation speed for both desktop and mobile */
 .animate-scroll {
   animation: scroll 25s linear infinite;
   will-change: transform;
 }
 
-/* Mobile: slower for smoother performance */
-.animate-scroll-slow {
-  animation: scroll-slow 40s linear infinite;
-  will-change: transform;
-}
-
-.animate-scroll:hover,
-.animate-scroll-slow:hover {
+.animate-scroll:hover {
   animation-play-state: paused;
 }

@@ -137,7 +137,7 @@ const FormModal: React.FC<FormModalProps> = ({
         setSubmitStatus('success');
         setTimeout(() => { onClose(); }, 2000);
       } else {
-        throw new Error(HTTP error! status: ${response.status});
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
     } catch (error) {
       console.error('Form submission error:', error);

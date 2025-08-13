@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const SuccessShowcase = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
   const successStories = [
     { name: "Rahul Sharma", image: "/assets/images/testimonials/Rohan_Sharma.jpeg", companyLogo: "https://logo.clearbit.com/amazon.com" },
     { name: "Priya Patel", image: "/assets/images/testimonials/Priya_Patel.jpeg", companyLogo: "https://logo.clearbit.com/microsoft.com" },
@@ -16,15 +14,8 @@ const SuccessShowcase = () => {
     { name: "Rahul Saini", image: "/assets/images/testimonials/Rahul_Saini.jpeg", companyLogo: "https://logo.clearbit.com/oracle.com" }
   ];
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  // Duplicate only on desktop for seamless infinite scroll
-  const duplicatedStories = isMobile ? successStories : [...successStories, ...successStories];
+  // Duplicate stories for seamless infinite scroll on all devices
+  const duplicatedStories = [...successStories, ...successStories];
 
   return (
     <section
@@ -51,10 +42,7 @@ const SuccessShowcase = () => {
         <div className="absolute right-0 top-0 bottom-0 w-16 lg:w-32 bg-gradient-to-l from-background-secondary to-transparent z-10 pointer-events-none"></div>
         
         {/* Scrolling container */}
-        <div
-          className={`flex ${isMobile ? 'animate-scroll-slow' : 'animate-scroll'}`}
-          role="list"
-        >
+        <div className="flex animate-scroll" role="list">
           {duplicatedStories.map((story, index) => (
             <div
               key={`${story.name}-${index}`}

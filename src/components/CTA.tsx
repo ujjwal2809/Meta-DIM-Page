@@ -82,7 +82,6 @@ const CTA = () => {
                   </div>
                 </div>
                 
-                <button className="w-full group inline-flex items-center justify-center btn-primary transform hover:scale-105 hover:shadow-xl">
                 <button 
                   onClick={openModal}
                   className="w-full group inline-flex items-center justify-center btn-primary transform hover:scale-105 hover:shadow-xl"
@@ -104,7 +103,6 @@ const CTA = () => {
               We're here to help you succeed, regardless.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="btn-secondary">
               <button onClick={openModal} className="btn-secondary">
                 Schedule Free Call
               </button>

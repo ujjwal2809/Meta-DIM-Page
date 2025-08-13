@@ -2,8 +2,12 @@ import React from 'react'
 import { Zap, Target, Rocket } from 'lucide-react'
 import 'keen-slider/keen-slider.min.css'
 import { useKeenSlider } from 'keen-slider/react'
+import FormModal from './FormModal'
+import { useFormModal } from '../hooks/useFormModal'
 
 const Solution = () => {
+  const { isOpen, openModal, closeModal } = useFormModal()
+
   const [sliderRef] = useKeenSlider({
     loop: false,
     mode: 'snap',
@@ -104,13 +108,24 @@ const Solution = () => {
         {/* CTA */}
         <div className="text-center">
           <div className="inline-flex flex-col sm:flex-row gap-4">
-            <button className="group inline-flex items-center justify-center btn-primary transform hover:scale-105 hover:shadow-xl">
+            <button 
+              onClick={openModal}
+              className="group inline-flex items-center justify-center btn-primary transform hover:scale-105 hover:shadow-xl"
+            >
               <Target className="w-5 h-5 mr-2 group-hover:animate-pulse" />
               Start Your Transformation Today
             </button>
           </div>
         </div>
       </div>
+      
+      {/* Form Modal */}
+      <FormModal 
+        isOpen={isOpen} 
+        onClose={closeModal}
+        title="Start Your DevOps Transformation"
+        subtitle="Get personalized guidance to accelerate your career change"
+      />
     </section>
   )
 }

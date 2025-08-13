@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, Play, X, CheckCircle, Award, Users, Code, Star, ArrowRight, Zap } from 'lucide-react';
+import FormModal from './FormModal';
+import { useFormModal } from '../hooks/useFormModal';
 
 const Hero = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    experience: ''
-  });
-  const [showForm, setShowForm] = useState(false);
   const [currentRole, setCurrentRole] = useState(0);
+  const { isOpen, openModal, closeModal } = useFormModal();
 
   const roles = ['DevOps Engineer', 'Cloud Engineer', 'SRE'];
 
@@ -19,19 +15,6 @@ const Hero = () => {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    setShowForm(false);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
 
   return (
     <section className="relative min-h-screen bg-white overflow-hidden">
@@ -100,7 +83,7 @@ const Hero = () => {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <button 
-                  onClick={() => setShowForm(true)}
+                  onClick={openModal}
                   className="group relative inline-flex items-center justify-center btn-primary transform hover:scale-105 shadow-lg hover:shadow-xl"
                 >
                   <Zap className="w-5 h-5 mr-2 group-hover:animate-pulse" />
@@ -230,88 +213,13 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Popup Lead Form */}
-      {showForm && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-md p-8 border border-neutral-200 shadow-card-hover max-w-md w-full relative">
-            <button
-              onClick={() => setShowForm(false)}
-              className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 transition-colors p-2 hover:bg-neutral-50 rounded-md"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-brand-500 rounded-md flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-2xl font-semibold text-neutral-900 mb-2">
-                Get Your Free Career Assessment
-              </h3>
-              <p className="text-neutral-600 text-sm">
-                Discover your path to a high-paying DevOps career
-              </p>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-md text-neutral-900 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 transition-all"
-                required
-              />
-              
-              <input
-                type="email"
-                name="email"
-                placeholder="Email Address"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-md text-neutral-900 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 transition-all"
-                required
-              />
-              
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                value={formData.phone}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-md text-neutral-900 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 transition-all"
-                required
-              />
-              
-              <select
-                name="experience"
-                value={formData.experience}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-md text-neutral-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 transition-all"
-                required
-              >
-                <option value="">Select Experience Level</option>
-                <option value="fresher">Fresh Graduate</option>
-                <option value="0-2">0-2 Years</option>
-                <option value="2-5">2-5 Years</option>
-              </select>
-              
-              <button
-                type="submit"
-                className="w-full py-4 btn-primary transform hover:scale-105 shadow-lg"
-              >
-                Get My Free Assessment
-              </button>
-              
-              <p className="text-xs text-neutral-600 text-center flex items-center justify-center gap-2">
-                <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse"></div>
-                Only 5 consultation slots left this week
-              </p>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Form Modal */}
+      <FormModal 
+        isOpen={isOpen} 
+        onClose={closeModal}
+        title="Get Your Free Career Assessment"
+        subtitle="Discover your path to a high-paying DevOps career"
+      />
     </section>
   );
 };

@@ -1,7 +1,11 @@
 import React from 'react';
 import { Award, Building, Users, Code } from 'lucide-react';
+import FormModal from './FormModal';
+import { useFormModal } from '../hooks/useFormModal';
 
 const Instructors = () => {
+  const { isOpen, openModal, closeModal } = useFormModal();
+
   const instructors = [
     {
       name: "Vikash Singh",
@@ -122,12 +126,20 @@ const Instructors = () => {
             <p className="text-neutral-600 mb-4 lg:mb-6 text-sm lg:text-base">
               Our instructors don't just teach — they mentor, guide, and support you until you land your dream job.
             </p>
-            <button className="btn-primary">
+            <button onClick={openModal} className="btn-primary">
               Meet Your Mentors
             </button>
           </div>
         </div>
       </div>
+      
+      {/* Form Modal */}
+      <FormModal 
+        isOpen={isOpen} 
+        onClose={closeModal}
+        title="Meet Your Expert Mentors"
+        subtitle="Get personalized guidance from industry professionals"
+      />
     </section>
   );
 };

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
+import FormModal from './FormModal';
+import { useFormModal } from '../hooks/useFormModal';
 
 const FAQ = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
+  const { isOpen, openModal, closeModal } = useFormModal();
 
   const faqs = [
     {
@@ -105,12 +108,20 @@ const FAQ = () => {
             <p className="text-neutral-600 mb-4 lg:mb-6 text-sm lg:text-base">
               Get all your doubts cleared in a free one-on-one consultation with our career experts.
             </p>
-            <button className="btn-primary">
+            <button onClick={openModal} className="btn-primary">
               Book Free Consultation Call
             </button>
           </div>
         </div>
       </div>
+      
+      {/* Form Modal */}
+      <FormModal 
+        isOpen={isOpen} 
+        onClose={closeModal}
+        title="Book Your Free Consultation"
+        subtitle="Get all your questions answered by our career experts"
+      />
     </section>
   );
 };

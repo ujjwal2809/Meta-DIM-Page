@@ -1,7 +1,11 @@
 import React from 'react';
 import { Phone, Clock, CheckCircle, ArrowRight } from 'lucide-react';
+import FormModal from './FormModal';
+import { useFormModal } from '../hooks/useFormModal';
 
 const CTA = () => {
+  const { isOpen, openModal, closeModal } = useFormModal();
+
   const benefits = [
     "Real-world project training with portfolio building",
     "Direct guidance from hiring managers and industry experts", 
@@ -79,6 +83,10 @@ const CTA = () => {
                 </div>
                 
                 <button className="w-full group inline-flex items-center justify-center btn-primary transform hover:scale-105 hover:shadow-xl">
+                <button 
+                  onClick={openModal}
+                  className="w-full group inline-flex items-center justify-center btn-primary transform hover:scale-105 hover:shadow-xl"
+                >
                   <Phone className="w-4 lg:w-5 h-4 lg:h-5 mr-2 group-hover:animate-pulse" />
                   Book Free Consultation Now
                   <ArrowRight className="w-4 lg:w-5 h-4 lg:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -97,6 +105,7 @@ const CTA = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="btn-secondary">
+              <button onClick={openModal} className="btn-secondary">
                 Schedule Free Call
               </button>
               <button className="btn-secondary">
@@ -106,6 +115,14 @@ const CTA = () => {
           </div>
         </div>
       </div>
+      
+      {/* Form Modal */}
+      <FormModal 
+        isOpen={isOpen} 
+        onClose={closeModal}
+        title="Book Your Free Career Assessment"
+        subtitle="Get personalized guidance for your DevOps career journey"
+      />
     </section>
   );
 };

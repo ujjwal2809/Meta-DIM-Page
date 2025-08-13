@@ -54,11 +54,14 @@ const Features = () => {
     },
   ];
 
-  // Create a safe ID from the title (replace spaces and lowercase it)
+  // This was only used for child IDs; not necessary for navbar
   const makeId = (title) => title.toLowerCase().replace(/\s+/g, '-');
 
   return (
-    <section className="section-padding bg-neutral-900 relative overflow-hidden">
+    <section
+      id="features" // ✅ Now navbar links will work
+      className="section-padding bg-neutral-900 relative overflow-hidden"
+    >
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.05%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%224%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20" />
 
       <div className="container-custom relative z-10">
@@ -76,7 +79,7 @@ const Features = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              id={makeId(feature.title)} // unique ID for anchor links
+              id={makeId(feature.title)} // still okay for internal linking if needed
             >
               <VideoFeature feature={feature} reverse={index % 2 === 1} />
             </div>

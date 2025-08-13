@@ -23,9 +23,9 @@ interface FormModalProps {
   subtitle?: string;
 }
 
-const FormModal: React.FC<FormModalProps> = ({ 
-  isOpen, 
-  onClose, 
+const FormModal: React.FC<FormModalProps> = ({
+  isOpen,
+  onClose,
   title = "Get Your Free Career Assessment",
   subtitle = "Take the first step towards your DevOps career transformation"
 }) => {
@@ -86,8 +86,8 @@ const FormModal: React.FC<FormModalProps> = ({
     if (!formData.phoneNumber.trim()) {
       newErrors.phoneNumber = 'Phone number is required';
     } else {
-      const phoneRegex = /^\d{10,}$/;
       const cleanPhone = formData.phoneNumber.replace(/\D/g, '');
+      const phoneRegex = /^\d{10,}$/;
       if (!phoneRegex.test(cleanPhone)) {
         newErrors.phoneNumber = 'Phone number must be at least 10 digits';
       }
@@ -97,19 +97,30 @@ const FormModal: React.FC<FormModalProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Remove error message only if the error exists on this field
+    if (name in errors) {
+      setErrors((prev) => {
+        const { [name]: removed, ...rest } = prev;
+        return rest;
+      });
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!validateForm()) return;
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
+
     try {
       const response = await fetch(
         'https://script.google.com/macros/s/AKfycbxF63OR0qJWOAvCs7ymfqKEZcplsz2Ib_donD6BBUEXe2b3bknEV3qJ8yeAz6GEYlOeNQ/exec',
@@ -127,21 +138,21 @@ const FormModal: React.FC<FormModalProps> = ({
           })
         }
       );
-      
-      console.log('Response:', response);
-      
+
       if (response.ok) {
-        const responseData = await response.json();
-        console.log('Response data:', responseData);
-        alert('Form submitted successfully!');
+        // You might want to handle the response JSON or ignore if unnecessary
+        // const responseData = await response.json();
+
         setSubmitStatus('success');
-        setTimeout(() => { onClose(); }, 2000);
+        // Optional: show success for 2 seconds then close
+        setTimeout(() => {
+          onClose();
+        }, 2000);
       } else {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
     } catch (error) {
       console.error('Form submission error:', error);
-      alert('Form submission failed. Please try again.');
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -155,9 +166,21 @@ const FormModal: React.FC<FormModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={handleBackdropClick}>
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={handleBackdropClick}
+      aria-modal="true"
+      role="dialog"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+    >
       <div className="bg-white rounded-lg shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 transition-colors p-2 hover:bg-neutral-50 rounded-full z-10" disabled={isSubmitting}>
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 transition-colors p-2 hover:bg-neutral-50 rounded-full z-10"
+          disabled={isSubmitting}
+          aria-label="Close modal"
+        >
           <X className="w-5 h-5" />
         </button>
         <div className="p-6 lg:p-8">
@@ -165,8 +188,15 @@ const FormModal: React.FC<FormModalProps> = ({
             <div className="w-16 h-16 bg-brand-500 rounded-lg flex items-center justify-center mx-auto mb-4">
               <User className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-2xl font-semibold text-neutral-900 mb-2">{title}</h3>
-            <p className="text-neutral-600 text-sm">{subtitle}</p>
+            <h3
+              className="text-2xl font-semibold text-neutral-900 mb-2"
+              id="modal-title"
+            >
+              {title}
+            </h3>
+            <p className="text-neutral-600 text-sm" id="modal-description">
+              {subtitle}
+            </p>
           </div>
 
           {submitStatus === 'success' && (
@@ -174,7 +204,9 @@ const FormModal: React.FC<FormModalProps> = ({
               <CheckCircle className="w-5 h-5 text-success-500 flex-shrink-0" />
               <div>
                 <p className="text-success-700 font-medium">Success!</p>
-                <p className="text-success-600 text-sm">We'll contact you within 24 hours.</p>
+                <p className="text-success-600 text-sm">
+                  We'll contact you within 24 hours.
+                </p>
               </div>
             </div>
           )}
@@ -184,87 +216,203 @@ const FormModal: React.FC<FormModalProps> = ({
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
               <div>
                 <p className="text-red-700 font-medium">Submission Failed</p>
-                <p className="text-red-600 text-sm">Please try again or call us directly.</p>
+                <p className="text-red-600 text-sm">
+                  Please try again or call us directly.
+                </p>
               </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {/* First Name */}
             <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-neutral-700 mb-2">First Name *</label>
+              <label
+                htmlFor="firstName"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                First Name *
+              </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <input
-                  type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.firstName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
-                  placeholder="Enter your first name" disabled={isSubmitting}
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
+                    errors.firstName
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                      : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
+                  }`}
+                  placeholder="Enter your first name"
+                  disabled={isSubmitting}
+                  aria-invalid={!!errors.firstName}
+                  aria-describedby={errors.firstName ? 'firstName-error' : undefined}
                 />
               </div>
-              {errors.firstName && <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.firstName}</p>}
+              {errors.firstName && (
+                <p
+                  id="firstName-error"
+                  className="mt-1 text-sm text-red-600 flex items-center gap-1"
+                  role="alert"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.firstName}
+                </p>
+              )}
             </div>
 
             {/* Last Name */}
             <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-neutral-700 mb-2">Last Name *</label>
+              <label
+                htmlFor="lastName"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Last Name *
+              </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <input
-                  type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.lastName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
-                  placeholder="Enter your last name" disabled={isSubmitting}
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
+                    errors.lastName
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                      : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
+                  }`}
+                  placeholder="Enter your last name"
+                  disabled={isSubmitting}
+                  aria-invalid={!!errors.lastName}
+                  aria-describedby={errors.lastName ? 'lastName-error' : undefined}
                 />
               </div>
-              {errors.lastName && <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.lastName}</p>}
+              {errors.lastName && (
+                <p
+                  id="lastName-error"
+                  className="mt-1 text-sm text-red-600 flex items-center gap-1"
+                  role="alert"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.lastName}
+                </p>
+              )}
             </div>
 
             {/* Phone Number */}
             <div>
-              <label htmlFor="phoneNumber" className="block text-sm font-medium text-neutral-700 mb-2">Phone Number *</label>
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Phone Number *
+              </label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <input
-                  type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.phoneNumber ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
-                  placeholder="Enter your phone number" disabled={isSubmitting}
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
+                    errors.phoneNumber
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                      : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
+                  }`}
+                  placeholder="Enter your phone number"
+                  disabled={isSubmitting}
+                  aria-invalid={!!errors.phoneNumber}
+                  aria-describedby={errors.phoneNumber ? 'phoneNumber-error' : undefined}
                 />
               </div>
-              {errors.phoneNumber && <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.phoneNumber}</p>}
+              {errors.phoneNumber && (
+                <p
+                  id="phoneNumber-error"
+                  className="mt-1 text-sm text-red-600 flex items-center gap-1"
+                  role="alert"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.phoneNumber}
+                </p>
+              )}
             </div>
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-2">Email Address (Optional)</label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Email Address (Optional)
+              </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <input
-                  type="email" id="email" name="email" value={formData.email} onChange={handleInputChange}
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   className="w-full pl-10 pr-4 py-3 bg-neutral-50 border border-neutral-300 rounded-lg text-neutral-900 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 transition-all"
-                  placeholder="Enter your email address" disabled={isSubmitting}
+                  placeholder="Enter your email address"
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
 
             {/* Experience */}
             <div>
-              <label htmlFor="experience" className="block text-sm font-medium text-neutral-700 mb-2">Experience Level *</label>
+              <label
+                htmlFor="experience"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Experience Level *
+              </label>
               <div className="relative">
                 <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <select
-                  id="experience" name="experience" value={formData.experience} onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 focus:outline-none focus:ring-2 transition-all ${errors.experience ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
+                  id="experience"
+                  name="experience"
+                  value={formData.experience}
+                  onChange={handleInputChange}
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
+                    errors.experience
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                      : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
+                  }`}
                   disabled={isSubmitting}
+                  aria-invalid={!!errors.experience}
+                  aria-describedby={errors.experience ? 'experience-error' : undefined}
                 >
-                  {experienceOptions.map(option => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
+                  {experienceOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
                   ))}
                 </select>
               </div>
-              {errors.experience && <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.experience}</p>}
+              {errors.experience && (
+                <p
+                  id="experience-error"
+                  className="mt-1 text-sm text-red-600 flex items-center gap-1"
+                  role="alert"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.experience}
+                </p>
+              )}
             </div>
 
             {/* Submit Button */}
-            <button type="submit" disabled={isSubmitting || submitStatus === 'success'} className="w-full py-4 btn-primary disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg">
+            <button
+              type="submit"
+              disabled={isSubmitting || submitStatus === 'success'}
+              className="w-full py-4 btn-primary disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg"
+            >
               {isSubmitting ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -272,14 +420,18 @@ const FormModal: React.FC<FormModalProps> = ({
                 </div>
               ) : submitStatus === 'success' ? (
                 <div className="flex items-center justify-center gap-2">
-                  <CheckCircle className="w-4 h-4" />Submitted Successfully!
+                  <CheckCircle className="w-4 h-4" />
+                  Submitted Successfully!
                 </div>
               ) : (
                 'Get My Free Assessment'
               )}
             </button>
 
-            <p className="text-xs text-neutral-500 text-center">We respect your privacy. Your information will only be used to contact you about our DevOps training program.</p>
+            <p className="text-xs text-neutral-500 text-center">
+              We respect your privacy. Your information will only be used to contact you
+              about our DevOps training program.
+            </p>
           </form>
         </div>
       </div>

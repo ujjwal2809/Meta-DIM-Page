@@ -127,18 +127,21 @@ const FormModal: React.FC<FormModalProps> = ({
           })
         }
       );
-
-      const responseData = await response.json();
-      console.log('Response:', responseData);
-
-      if (response.ok && responseData.status === 'success') {
+      
+      console.log('Response:', response);
+      
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Response data:', responseData);
+        alert('Form submitted successfully!');
         setSubmitStatus('success');
-        setTimeout(() => onClose(), 2000);
+        setTimeout(() => { onClose(); }, 2000);
       } else {
-        throw new Error(responseData.message || 'Unknown error from server');
+        throw new Error(HTTP error! status: ${response.status});
       }
     } catch (error) {
-      console.error('Submission Error:', error);
+      console.error('Form submission error:', error);
+      alert('Form submission failed. Please try again.');
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -167,11 +170,11 @@ const FormModal: React.FC<FormModalProps> = ({
           </div>
 
           {submitStatus === 'success' && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+            <div className="mb-6 p-4 bg-success-50 border border-success-200 rounded-lg flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-success-500 flex-shrink-0" />
               <div>
-                <p className="text-green-700 font-medium">Success!</p>
-                <p className="text-green-600 text-sm">We’ll contact you within 24 hours.</p>
+                <p className="text-success-700 font-medium">Success!</p>
+                <p className="text-success-600 text-sm">We'll contact you within 24 hours.</p>
               </div>
             </div>
           )}
@@ -186,11 +189,98 @@ const FormModal: React.FC<FormModalProps> = ({
             </div>
           )}
 
-          {/* Your form fields remain unchanged */}
-          {/* ... keep the existing form here ... */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* First Name */}
+            <div>
+              <label htmlFor="firstName" className="block text-sm font-medium text-neutral-700 mb-2">First Name *</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange}
+                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.firstName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}}
+                  placeholder="Enter your first name" disabled={isSubmitting}
+                />
+              </div>
+              {errors.firstName && <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.firstName}</p>}
+            </div>
 
-          {/* Rest of your form rendering is untouched */}
-          {/* Submit button, inputs, and error messages are already well-written */}
+            {/* Last Name */}
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-neutral-700 mb-2">Last Name *</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange}
+                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.lastName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}}
+                  placeholder="Enter your last name" disabled={isSubmitting}
+                />
+              </div>
+              {errors.lastName && <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.lastName}</p>}
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label htmlFor="phoneNumber" className="block text-sm font-medium text-neutral-700 mb-2">Phone Number *</label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange}
+                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.phoneNumber ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}}
+                  placeholder="Enter your phone number" disabled={isSubmitting}
+                />
+              </div>
+              {errors.phoneNumber && <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.phoneNumber}</p>}
+            </div>
+
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-2">Email Address (Optional)</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="email" id="email" name="email" value={formData.email} onChange={handleInputChange}
+                  className="w-full pl-10 pr-4 py-3 bg-neutral-50 border border-neutral-300 rounded-lg text-neutral-900 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 transition-all"
+                  placeholder="Enter your email address" disabled={isSubmitting}
+                />
+              </div>
+            </div>
+
+            {/* Experience */}
+            <div>
+              <label htmlFor="experience" className="block text-sm font-medium text-neutral-700 mb-2">Experience Level *</label>
+              <div className="relative">
+                <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <select
+                  id="experience" name="experience" value={formData.experience} onChange={handleInputChange}
+                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 focus:outline-none focus:ring-2 transition-all ${errors.experience ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}}
+                  disabled={isSubmitting}
+                >
+                  {experienceOptions.map(option => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </div>
+              {errors.experience && <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.experience}</p>}
+            </div>
+
+            {/* Submit Button */}
+            <button type="submit" disabled={isSubmitting || submitStatus === 'success'} className="w-full py-4 btn-primary disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg">
+              {isSubmitting ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Submitting...
+                </div>
+              ) : submitStatus === 'success' ? (
+                <div className="flex items-center justify-center gap-2">
+                  <CheckCircle className="w-4 h-4" />Submitted Successfully!
+                </div>
+              ) : (
+                'Get My Free Assessment'
+              )}
+            </button>
+
+            <p className="text-xs text-neutral-500 text-center">We respect your privacy. Your information will only be used to contact you about our DevOps training program.</p>
+          </form>
         </div>
       </div>
     </div>

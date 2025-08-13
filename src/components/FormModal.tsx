@@ -197,7 +197,7 @@ const FormModal: React.FC<FormModalProps> = ({
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <input
                   type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange}
-                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.firstName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}}
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.firstName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
                   placeholder="Enter your first name" disabled={isSubmitting}
                 />
               </div>
@@ -211,7 +211,7 @@ const FormModal: React.FC<FormModalProps> = ({
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <input
                   type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange}
-                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.lastName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}}
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.lastName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
                   placeholder="Enter your last name" disabled={isSubmitting}
                 />
               </div>
@@ -225,7 +225,7 @@ const FormModal: React.FC<FormModalProps> = ({
                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <input
                   type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange}
-                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.phoneNumber ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}}
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.phoneNumber ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
                   placeholder="Enter your phone number" disabled={isSubmitting}
                 />
               </div>
@@ -252,7 +252,7 @@ const FormModal: React.FC<FormModalProps> = ({
                 <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <select
                   id="experience" name="experience" value={formData.experience} onChange={handleInputChange}
-                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 focus:outline-none focus:ring-2 transition-all ${errors.experience ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}}
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 focus:outline-none focus:ring-2 transition-all ${errors.experience ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
                   disabled={isSubmitting}
                 >
                   {experienceOptions.map(option => (

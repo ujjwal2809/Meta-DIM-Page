@@ -1,12 +1,5 @@
-import React, { useState } from 'react';
-import { X, User, Phone, Mail, Briefcase } from 'lucide-react';
-
-interface FormModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  subtitle?: string;
-}
+import React, { useState, useEffect } from 'react';
+import { X, User, Phone, Mail, Briefcase, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface FormData {
   firstName: string;
@@ -17,18 +10,24 @@ interface FormData {
 }
 
 interface FormErrors {
-  firstName: boolean;
-  lastName: boolean;
-  phoneNumber: boolean;
-  email: boolean;
-  experience: boolean;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  experience?: string;
 }
 
-const FormModal: React.FC<FormModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  title = "Get Started Today", 
-  subtitle = "Fill out the form below and we'll get back to you within 24 hours." 
+interface FormModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  subtitle?: string;
+}
+
+const FormModal: React.FC<FormModalProps> = ({
+  isOpen,
+  onClose,
+  title = "Get Your Free Career Assessment",
+  subtitle = "Take the first step towards your DevOps career transformation"
 }) => {
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -38,82 +37,119 @@ const FormModal: React.FC<FormModalProps> = ({
     experience: ''
   });
 
-  const [errors, setErrors] = useState<FormErrors>({
-    firstName: false,
-    lastName: false,
-    phoneNumber: false,
-    email: false,
-    experience: false
-  });
-
+  const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: false
-      }));
+  const experienceOptions = [
+    { value: '', label: 'Select your experience level' },
+    { value: 'fresher', label: 'Fresh Graduate (0 years)' },
+    { value: '0-2', label: '0-2 Years Experience' },
+    { value: '2-5', label: '2-5 Years Experience' },
+    { value: '5+', label: '5+ Years Experience' }
+  ];
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
     }
-  };
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        email: '',
+        experience: ''
+      });
+      setErrors({});
+      setSubmitStatus('idle');
+    }
+  }, [isOpen]);
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {
-      firstName: !formData.firstName.trim(),
-      lastName: !formData.lastName.trim(),
-      phoneNumber: !formData.phoneNumber.trim(),
-      email: !formData.email.trim(),
-      experience: !formData.experience.trim()
-    };
-
+    const newErrors: FormErrors = {};
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = 'Phone number is required';
+    } else {
+      const cleanPhone = formData.phoneNumber.replace(/\D/g, '');
+      const phoneRegex = /^\d{10,}$/;
+      if (!phoneRegex.test(cleanPhone)) {
+        newErrors.phoneNumber = 'Phone number must be at least 10 digits';
+      }
+    }
+    if (!formData.experience) newErrors.experience = 'Please select your experience level';
     setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Remove error message only if the error exists on this field
+    if (name in errors) {
+      setErrors((prev) => {
+        const { [name]: removed, ...rest } = prev;
+        return rest;
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
+
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbxF63OR0qJWOAvCs7ymfqKEZcplsz2Ib_donD6BBUEXe2b3bknEV3qJ8yeAz6GEYlOeNQ/exec", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json" 
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+'https://script.google.com/macros/s/AKfycbxi6oPRot3O3vz9WdWEDBkE-Appi2uajk-b-CVmt9EWHxtodi6KW85DvQuZHmCY7QRt/exec',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            firstName: formData.firstName.trim(),
+            lastName: formData.lastName.trim(),
+            phoneNumber: formData.phoneNumber.replace(/\D/g, ''),
+            email: formData.email.trim(),
+            experience: formData.experience
+          })
+        }
+      );
 
       if (response.ok) {
-        const result = await response.json();
-        if (result.status === "success") {
-          setSubmitStatus('success');
-          setFormData({
-            firstName: '',
-            lastName: '',
-            phoneNumber: '',
-            email: '',
-            experience: ''
-          });
-          setTimeout(() => { onClose(); }, 2000);
-        } else {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        // You might want to handle the response JSON or ignore if unnecessary
+        // const responseData = await response.json();
+
+        setSubmitStatus('success');
+        // Optional: show success for 2 seconds then close
+        setTimeout(() => {
+          onClose();
+        }, 2000);
       } else {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(HTTP error! status: ${response.status});
       }
     } catch (error) {
       console.error('Form submission error:', error);
@@ -123,167 +159,281 @@ const FormModal: React.FC<FormModalProps> = ({
     }
   };
 
-  const handleClose = () => {
-    if (!isSubmitting) {
-      onClose();
-      setSubmitStatus('idle');
-      setErrors({
-        firstName: false,
-        lastName: false,
-        phoneNumber: false,
-        email: false,
-        experience: false
-      });
-    }
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-neutral-200">
-          <div>
-            <h2 className="text-2xl font-bold text-neutral-900">{title}</h2>
-            <p className="text-sm text-neutral-600 mt-1">{subtitle}</p>
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={handleBackdropClick}
+      aria-modal="true"
+      role="dialog"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+    >
+      <div className="bg-white rounded-lg shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto relative">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 transition-colors p-2 hover:bg-neutral-50 rounded-full z-10"
+          disabled={isSubmitting}
+          aria-label="Close modal"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        <div className="p-6 lg:p-8">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-brand-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <User className="w-8 h-8 text-white" />
+            </div>
+            <h3
+              className="text-2xl font-semibold text-neutral-900 mb-2"
+              id="modal-title"
+            >
+              {title}
+            </h3>
+            <p className="text-neutral-600 text-sm" id="modal-description">
+              {subtitle}
+            </p>
           </div>
-          <button
-            onClick={handleClose}
-            disabled={isSubmitting}
-            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors disabled:opacity-50"
-          >
-            <X className="w-5 h-5 text-neutral-500" />
-          </button>
-        </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {submitStatus === 'success' && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-              <p className="text-green-800 text-sm font-medium">
-                ✅ Form submitted successfully! We'll get back to you soon.
-              </p>
+            <div className="mb-6 p-4 bg-success-50 border border-success-200 rounded-lg flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-success-500 flex-shrink-0" />
+              <div>
+                <p className="text-success-700 font-medium">Success!</p>
+                <p className="text-success-600 text-sm">
+                  We'll contact you within 24 hours.
+                </p>
+              </div>
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-              <p className="text-red-800 text-sm font-medium">
-                ❌ Something went wrong. Please try again.
-              </p>
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+              <div>
+                <p className="text-red-700 font-medium">Submission Failed</p>
+                <p className="text-red-600 text-sm">
+                  Please try again or call us directly.
+                </p>
+              </div>
             </div>
           )}
 
-          {/* First Name */}
-          <div className="space-y-2">
-            <label htmlFor="firstName" className="block text-sm font-medium text-neutral-700">
-              First Name *
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <User className="h-5 w-5 text-neutral-400" />
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            {/* First Name */}
+            <div>
+              <label
+                htmlFor="firstName"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                First Name *
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
+                    errors.firstName
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                      : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
+                  }}
+                  placeholder="Enter your first name"
+                  disabled={isSubmitting}
+                  aria-invalid={!!errors.firstName}
+                  aria-describedby={errors.firstName ? 'firstName-error' : undefined}
+                />
               </div>
-              <input
-                type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.firstName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
-                placeholder="Enter your first name" disabled={isSubmitting}
-              />
+              {errors.firstName && (
+                <p
+                  id="firstName-error"
+                  className="mt-1 text-sm text-red-600 flex items-center gap-1"
+                  role="alert"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.firstName}
+                </p>
+              )}
             </div>
-            {errors.firstName && (
-              <p className="text-red-500 text-xs mt-1">First name is required</p>
-            )}
-          </div>
 
-          {/* Last Name */}
-          <div className="space-y-2">
-            <label htmlFor="lastName" className="block text-sm font-medium text-neutral-700">
-              Last Name *
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <User className="h-5 w-5 text-neutral-400" />
+            {/* Last Name */}
+            <div>
+              <label
+                htmlFor="lastName"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Last Name *
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
+                    errors.lastName
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                      : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
+                  }}
+                  placeholder="Enter your last name"
+                  disabled={isSubmitting}
+                  aria-invalid={!!errors.lastName}
+                  aria-describedby={errors.lastName ? 'lastName-error' : undefined}
+                />
               </div>
-              <input
-                type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.lastName ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
-                placeholder="Enter your last name" disabled={isSubmitting}
-              />
+              {errors.lastName && (
+                <p
+                  id="lastName-error"
+                  className="mt-1 text-sm text-red-600 flex items-center gap-1"
+                  role="alert"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.lastName}
+                </p>
+              )}
             </div>
-            {errors.lastName && (
-              <p className="text-red-500 text-xs mt-1">Last name is required</p>
-            )}
-          </div>
 
-          {/* Phone Number */}
-          <div className="space-y-2">
-            <label htmlFor="phoneNumber" className="block text-sm font-medium text-neutral-700">
-              Phone Number *
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Phone className="h-5 w-5 text-neutral-400" />
+            {/* Phone Number */}
+            <div>
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Phone Number *
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
+                    errors.phoneNumber
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                      : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
+                  }}
+                  placeholder="Enter your phone number"
+                  disabled={isSubmitting}
+                  aria-invalid={!!errors.phoneNumber}
+                  aria-describedby={errors.phoneNumber ? 'phoneNumber-error' : undefined}
+                />
               </div>
-              <input
-                type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.phoneNumber ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
-                placeholder="Enter your phone number" disabled={isSubmitting}
-              />
+              {errors.phoneNumber && (
+                <p
+                  id="phoneNumber-error"
+                  className="mt-1 text-sm text-red-600 flex items-center gap-1"
+                  role="alert"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.phoneNumber}
+                </p>
+              )}
             </div>
-            {errors.phoneNumber && (
-              <p className="text-red-500 text-xs mt-1">Phone number is required</p>
-            )}
-          </div>
 
-          {/* Email */}
-          <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-neutral-700">
-              Email Address
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-neutral-400" />
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Email Address (Optional)
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 pr-4 py-3 bg-neutral-50 border border-neutral-300 rounded-lg text-neutral-900 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 transition-all"
+                  placeholder="Enter your email address"
+                  disabled={isSubmitting}
+                />
               </div>
-              <input
-                type="email" id="email" name="email" value={formData.email} onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
-                placeholder="Enter your email address" disabled={isSubmitting}
-              />
             </div>
-            {errors.email && (
-              <p className="text-red-500 text-xs mt-1">Email is required</p>
-            )}
-          </div>
 
-          {/* Experience */}
-          <div className="space-y-2">
-            <label htmlFor="experience" className="block text-sm font-medium text-neutral-700">
-              Experience *
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Briefcase className="h-5 w-5 text-neutral-400" />
+            {/* Experience */}
+            <div>
+              <label
+                htmlFor="experience"
+                className="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Experience Level *
+              </label>
+              <div className="relative">
+                <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <select
+                  id="experience"
+                  name="experience"
+                  value={formData.experience}
+                  onChange={handleInputChange}
+                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
+                    errors.experience
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                      : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
+                  }}
+                  disabled={isSubmitting}
+                  aria-invalid={!!errors.experience}
+                  aria-describedby={errors.experience ? 'experience-error' : undefined}
+                >
+                  {experienceOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <input
-                type="text" id="experience" name="experience" value={formData.experience} onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${errors.experience ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'}`}
-                placeholder="Describe your experience" disabled={isSubmitting}
-              />
+              {errors.experience && (
+                <p
+                  id="experience-error"
+                  className="mt-1 text-sm text-red-600 flex items-center gap-1"
+                  role="alert"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.experience}
+                </p>
+              )}
             </div>
-            {errors.experience && (
-              <p className="text-red-500 text-xs mt-1">Experience is required</p>
-            )}
-          </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-brand-600 hover:bg-brand-700 disabled:bg-neutral-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Application'}
-          </button>
-        </form>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting || submitStatus === 'success'}
+              className="w-full py-4 btn-primary disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg"
+            >
+              {isSubmitting ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Submitting...
+                </div>
+              ) : submitStatus === 'success' ? (
+                <div className="flex items-center justify-center gap-2">
+                  <CheckCircle className="w-4 h-4" />
+                  Submitted Successfully!
+                </div>
+              ) : (
+                'Get My Free Assessment'
+              )}
+            </button>
+
+            <p className="text-xs text-neutral-500 text-center">
+              We respect your privacy. Your information will only be used to contact you
+              about our DevOps training program.
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );

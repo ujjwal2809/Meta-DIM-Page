@@ -240,11 +240,11 @@ const FormModal: React.FC<FormModalProps> = ({
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
                     errors.firstName
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                       : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
-                  }}
+                  }`}
                   placeholder="Enter your first name"
                   disabled={isSubmitting}
                   aria-invalid={!!errors.firstName}
@@ -279,11 +279,11 @@ const FormModal: React.FC<FormModalProps> = ({
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
                     errors.lastName
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                       : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
-                  }}
+                  }`}
                   placeholder="Enter your last name"
                   disabled={isSubmitting}
                   aria-invalid={!!errors.lastName}
@@ -318,11 +318,11 @@ const FormModal: React.FC<FormModalProps> = ({
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleInputChange}
-                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 transition-all ${
                     errors.phoneNumber
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                       : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
-                  }}
+                  }`}
                   placeholder="Enter your phone number"
                   disabled={isSubmitting}
                   aria-invalid={!!errors.phoneNumber}
@@ -379,11 +379,11 @@ const FormModal: React.FC<FormModalProps> = ({
                   name="experience"
                   value={formData.experience}
                   onChange={handleInputChange}
-                  className={w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-4 py-3 bg-neutral-50 border rounded-lg text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
                     errors.experience
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                       : 'border-neutral-300 focus:border-brand-500 focus:ring-brand-200'
-                  }}
+                  }`}
                   disabled={isSubmitting}
                   aria-invalid={!!errors.experience}
                   aria-describedby={errors.experience ? 'experience-error' : undefined}

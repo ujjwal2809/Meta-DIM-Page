@@ -152,34 +152,30 @@ const FormModal: React.FC<FormModalProps> = ({
     setSubmitStatus('idle');
 
     try {
-      const response = await fetch(
-'https://script.google.com/macros/s/AKfycbyMBD3DN-bCeLYWN3msNR2wOiiAIj_FybZ_4O-HTBoieD4utYus7i7DTLz2d9QJYtU1/exec',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            firstName: formData.firstName.trim(),
-            lastName: formData.lastName.trim(),
-            phoneNumber: formData.phoneNumber.replace(/\D/g, ''),
-            email: formData.email.trim(),
-            experience: formData.experience
-          })
-        }
-      );
+      const response = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName.trim(),
+          lastName: formData.lastName.trim(),
+          phoneNumber: formData.phoneNumber.replace(/\D/g, ''),
+          email: formData.email.trim(),
+          experience: formData.experience
+        })
+      });
 
-      if (response.ok) {
-        // You might want to handle the response JSON or ignore if unnecessary
-        // const responseData = await response.json();
+      const responseData = await response.json();
 
+      if (response.ok && responseData.success) {
         setSubmitStatus('success');
         // Optional: show success for 2 seconds then close
         setTimeout(() => {
           onClose();
         }, 2000);
       } else {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(responseData.message || `HTTP error! status: ${response.status}`);
       }
     } catch (error) {
       console.error('Form submission error:', error);

@@ -92,16 +92,10 @@ const Hero = () => {
                 </button>
                 
                <button
-  )
-  )
-  onClick={() => {
+                  className="btn-secondary flex items-center"
+                  onClick={() => {
     document.getElementById('placement-training')?.scrollIntoView({ behavior: 'smooth' });
   }}
-}
->
-  <Play className="w-5 h-5 mr-2" />
-  Watch Success Stories
-</button>
               </div>
 
               {/* Trust Indicators */}

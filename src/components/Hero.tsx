@@ -96,6 +96,9 @@ const Hero = () => {
                   onClick={() => {
     document.getElementById('placement-training')?.scrollIntoView({ behavior: 'smooth' });
   }}
+                >
+                  Watch Demo
+                </button>
               </div>
 
               {/* Trust Indicators */}

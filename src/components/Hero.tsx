@@ -170,29 +170,23 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* ✅ Bottom Trust Bar (fixed for mobile) */}
+          {/* ✅ Bottom Trust Bar (always column layout) */}
           <div className="mt-16 lg:mt-20 text-center">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 bg-white rounded-md px-6 py-4 border border-neutral-200 shadow-card">
+            <div className="flex flex-col items-center gap-6 bg-white rounded-md px-6 py-6 border border-neutral-200 shadow-card">
               
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col items-center gap-1">
                 <Star className="w-5 h-5 text-warning-500 fill-current" />
                 <span className="text-neutral-900 font-semibold">4.9/5</span>
                 <span className="text-neutral-600 text-sm">Student Rating</span>
               </div>
 
-              {/* Divider visible only on sm+ screens */}
-              <div className="hidden sm:block w-px h-6 bg-neutral-200"></div>
-
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col items-center gap-1">
                 <Users className="w-5 h-5 text-brand-500" />
                 <span className="text-neutral-900 font-semibold">750+</span>
                 <span className="text-neutral-600 text-sm">Success Stories</span>
               </div>
 
-              {/* Divider visible only on sm+ screens */}
-              <div className="hidden sm:block w-px h-6 bg-neutral-200"></div>
-
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col items-center gap-1">
                 <Award className="w-5 h-5 text-success-500" />
                 <span className="text-neutral-900 font-semibold">12 Weeks</span>
                 <span className="text-neutral-600 text-sm">To Career Change</span>

@@ -93,7 +93,6 @@ const Hero = () => {
                 
                <button
   )
-  className="btn-secondary flex items-center"
   onClick={() => {
     document.getElementById('placement-training')?.scrollIntoView({ behavior: 'smooth' });
   }}

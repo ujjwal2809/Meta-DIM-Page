@@ -93,6 +93,7 @@ const Hero = () => {
                 
                <button
   )
+  )
   onClick={() => {
     document.getElementById('placement-training')?.scrollIntoView({ behavior: 'smooth' });
   }}

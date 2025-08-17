@@ -216,41 +216,7 @@ const Hero = () => {
       <span className="text-neutral-600 text-sm">To Career Change</span>
     </div>
   </div>
-</div>
-📱 On mobile → They will stack (no cut-off).
-💻 On tablet/desktop → They will stay in a row with dividers.
-
-✅ Solution 2 (Horizontal Scroll on Mobile)
-If you prefer to keep them in one row but allow scrolling, wrap it in an overflow container:
-
-jsx
-Copy
-Edit
-<div className="mt-16 lg:mt-20 text-center">
-  <div className="flex items-center gap-8 bg-white rounded-md px-8 py-4 border border-neutral-200 shadow-card overflow-x-auto no-scrollbar">
-    
-    <div className="flex items-center gap-2 flex-shrink-0">
-      <Star className="w-5 h-5 text-warning-500 fill-current" />
-      <span className="text-neutral-900 font-semibold">4.9/5</span>
-      <span className="text-neutral-600 text-sm">Student Rating</span>
-    </div>
-
-    <div className="w-px h-6 bg-neutral-200 flex-shrink-0"></div>
-
-    <div className="flex items-center gap-2 flex-shrink-0">
-      <Users className="w-5 h-5 text-brand-500" />
-      <span className="text-neutral-900 font-semibold">750+</span>
-      <span className="text-neutral-600 text-sm">Success Stories</span>
-    </div>
-
-    <div className="w-px h-6 bg-neutral-200 flex-shrink-0"></div>
-
-    <div className="flex items-center gap-2 flex-shrink-0">
-      <Award className="w-5 h-5 text-success-500" />
-      <span className="text-neutral-900 font-semibold">12 Weeks</span>
-      <span className="text-neutral-600 text-sm">To Career Change</span>
-    </div>
-  </div>
+        </div>
 
 
       {/* Form Modal */}
